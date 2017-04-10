@@ -1,0 +1,112 @@
+{% extends 'User/base.html' %}
+{% block head %}
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <style>
+        .download {
+            visibility: hidden;
+            position: relative;
+            top: 80px;
+        }
+
+        .card {
+            margin: 0 auto;
+            width: 600px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            top: 100px;
+        }
+
+        .card h1 {
+            font-size: 18px;
+            color: #3F51B5;
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        #p2 {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            visibility: hidden;
+        }
+
+        .right-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 10px;
+            color: #3F51B5;
+        }
+
+        .download-container {
+            border-radius: 4px;
+            background-color: #BBDEFB;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+            height: 200px;
+            margin: 0 auto;
+            top: 50px;
+            align-items: center;
+        }
+
+        .download-container span {
+            position: relative;
+            top: 20px;
+        }
+    </style>
+{% endblock %}
+{% block nav %}
+    <a class="mdl-navigation__link" href="{% url 'users:all_products' %}">All Products</a>
+    <a class="mdl-navigation__link" href="{% url 'users:upload_csv' %}">Upload CSV</a>
+    <a class="mdl-navigation__link" href="{% url 'users:csv' %}">Download CSV</a>
+    <a class="mdl-navigation__link" href="{% url 'users:logout' %}">Logout</a>
+{% endblock %}
+{% block body %}
+    <div class="card">
+        <h1>You can scrap the squash section here</h1>
+        <button onclick="startSpider()" id="scrap_btn"
+                class="mdl-button mdl-js-button mdl-js-ripple-effect right-btn">
+            Start Spider
+        </button>
+        <div class="download-container">
+            <span id="download_text" class="download-text">Please run the spider to generate the CSV file</span>
+            <div>
+                <a class="download" id="download_link">Download CSV File</a>
+            </div>
+        </div>
+
+        <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+    </div>
+    <script type="text/javascript">
+        function startSpider() {
+            var link_element = $('#download_link');
+            var span = $('#download_text');
+            var loader = $('#p2');
+            var scrap_btn = $('#scrap_btn');
+            span.text("Please wait while the Spider is running....");
+            loader.css('visibility', 'visible');
+            link_element.css('visibility', 'hidden');
+            scrap_btn.attr('disabled', true);
+            $.ajax({
+                url: '/deploy/spider',
+                type: "get",
+                data: {
+                    text: "Hello World"
+                },
+                success: function (response) {
+                    console.log("Spider Finished " + response.Data);
+                    link_element.attr('href', response.Data);
+                    link_element.css('visibility', 'visible');
+                    span.text("Please download the CSV file below");
+                    loader.css('visibility', 'hidden');
+                    scrap_btn.attr('disabled', false);
+                }
+            });
+        }
+    </script>
+{% endblock %}

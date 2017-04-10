@@ -1,0 +1,45 @@
+{% extends 'User/base.html' %}
+{% load staticfiles %}
+{% block head %}
+    <style>
+        .select_input{
+            color:#d50000;
+        }
+    .card{
+        position: relative;
+        top:100px;
+    }
+
+    </style>
+{% endblock %}
+{% block nav %}
+    <a class="mdl-navigation__link" href="{% url 'users:all_products' %}">All Products</a>
+    <a class="mdl-navigation__link" href="{% url 'users:deploy_spider' %}">Run Spider</a>
+    <a class="mdl-navigation__link" href="{% url 'users:upload_csv' %}">Upload CSV</a>
+    <a class="mdl-navigation__link" href="{% url 'users:csv' %}">Download CSV</a>
+    <a class="mdl-navigation__link" href="{% url 'users:logout' %}">Logout</a>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="card">
+            <div class="header-container">
+                <h1 class="card-header">Create Product</h1>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    {% if forloop.counter != 2 %}
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+                            {{ field }}
+                            <label class="mdl-textfield__label" for="sample3">{{ field.label }}</label>
+                        </div>
+                    {% else %}
+                     <span class="select_input">{{ field.label }}</span>  {{ field }}
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect right-btn">Add Product
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

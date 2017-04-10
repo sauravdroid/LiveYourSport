@@ -1,0 +1,111 @@
+{% extends 'User/base.html' %}
+{% load staticfiles %}
+{% block nav %}
+    <a class="mdl-navigation__link" href="{% url 'users:deploy_spider' %}">Run Spider</a>
+    <a class="mdl-navigation__link" href="{% url 'users:upload_csv' %}">Upload CSV</a>
+    <a class="mdl-navigation__link" href="{% url 'users:csv' %}">Download CSV</a>
+    <a class="mdl-navigation__link" href="{% url 'users:logout' %}">Logout</a>
+{% endblock %}
+{% block head %}
+    <style>
+        table.fixed {
+            table-layout: fixed;
+            width: 90%;
+            margin: 0 auto;
+            position: relative;
+            top:50px;
+        }
+
+        table.fixed td {
+            overflow: hidden;
+        }
+
+        .active-td {
+            background-color: #ddffdd;
+        }
+
+        .cancelled-td {
+            background-color: #FFD180;
+        }
+
+        .create-product {
+            position: fixed;
+            z-index: 20;
+            bottom: 40px;
+            right: 60px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+{% endblock %}
+{% block tabs %}
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+            {% if active_page == 1 %}
+                <a href="#" class="mdl-layout__tab is-active">All Products</a>
+                <a href="/all?order_by_status=true" class="mdl-layout__tab">Products by status</a>
+                <a href="/all?active_order=true" class="mdl-layout__tab">Active Orders</a>
+                <a href="/all?cancelled_order=true" class="mdl-layout__tab">Cancelled Orders</a>
+            {% elif active_page == 2 %}
+                <a href="/all" class="mdl-layout__tab">All Products</a>
+                <a href="#" class="mdl-layout__tab is-active">Products by status</a>
+                <a href="/all?active_order=true" class="mdl-layout__tab">Active Orders</a>
+                <a href="/all?cancelled_order=true" class="mdl-layout__tab">Cancelled Orders</a>
+            {% elif active_page == 3 %}
+                <a href="/all" class="mdl-layout__tab">All Products</a>
+                <a href="/all?order_by_status=true" class="mdl-layout__tab">Products by status</a>
+                <a href="#" class="mdl-layout__tab is-active">Active Orders</a>
+                <a href="/all?cancelled_order=true" class="mdl-layout__tab">Cancelled Orders</a>
+            {% elif active_page == 4 %}
+                <a href="/all" class="mdl-layout__tab">All Products</a>
+                <a href="/all?order_by_status=true" class="mdl-layout__tab">Products by status</a>
+                <a href="/all?active_order=true" class="mdl-layout__tab">Active Orders</a>
+                <a href="#" class="mdl-layout__tab is-active">Cancelled Orders</a>
+            {% endif %}
+        </div>
+{% endblock %}
+{% block body %}
+    <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp fixed">
+        <col width="40px">
+        <col width="80px">
+        <col width="30px">
+        <col width="40px">
+        <col width="40px">
+        <thead>
+        <tr>
+            <th class="mdl-data-table__cell--non-numeric"><span>Order ID</span></th>
+            <th class="mdl-data-table__cell--non-numeric" width="100"><span>Product Name</span></th>
+            <th class="mdl-data-table__cell--non-numeric"><span>Order Status</span></th>
+            <th class="mdl-data-table__cell--non-numeric"><span>Product Url</span></th>
+            <th class="mdl-data-table__cell--non-numeric"><span>Cost Price</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+            {% if product.order_status == 'Active' %}
+                <tr class="active-td">
+                    <td class="mdl-data-table__cell--non-numeric">{{ product.order_id }}</td>
+                    <td class="mdl-data-table__cell--non-numeric second-row">{{ product.product_name }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ product.order_status }}</td>
+                    <td class="mdl-data-table__cell--non-numeric"><a target="_blank"
+                                                                     href="{{ product.product_url }}">{{ product.product_url }}</a>
+                    </td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ product.get_rupee }}</td>
+                </tr>
+            {% else %}
+                <tr class="cancelled-td">
+                    <td class="mdl-data-table__cell--non-numeric">{{ product.order_id }}</td>
+                    <td class="mdl-data-table__cell--non-numeric second-row">{{ product.product_name }}</td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ product.order_status }}</td>
+                    <td class="mdl-data-table__cell--non-numeric"><a target="_blank"
+                                                                     href="{{ product.product_url }}">{{ product.product_url }}</a>
+                    </td>
+                    <td class="mdl-data-table__cell--non-numeric">{{ product.cost_price }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    <button onclick="location.href='{% url 'users:create' %}'"
+            class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored create-product">
+        <i class="material-icons">add</i>
+    </button>
+{% endblock %}

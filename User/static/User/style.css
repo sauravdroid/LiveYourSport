@@ -1,0 +1,42 @@
+.text-field{
+    display: block;
+}
+h1,h2,h3,h4,h5{
+    padding: 0;
+    margin: 0;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+}
+.card{
+    display: inline-block;
+    border-radius: 4px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+    position: relative;
+}
+.right-btn{
+    position: relative;
+    float: right;
+    margin-bottom: 10px;
+}
+.header-container{
+    position: relative;
+    height: 40px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: #5b80b2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.card-header{
+    font-size: 16px;
+    color:#fff;
+    margin-left: 20px;
+}
+.card form{
+    margin: 0 20px;
+}

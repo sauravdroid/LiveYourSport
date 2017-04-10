@@ -1,0 +1,36 @@
+{% extends 'User/base.html' %}
+{% load staticfiles %}
+{% block head %}
+    <style>
+        button.right-btn{
+            color:#5b80b2;
+        }
+        .card{
+            top:100px;
+        }
+    </style>
+{% endblock %}
+{% block nav %}
+    <a class="mdl-navigation__link" href="{% url 'users:login' %}">Login</a>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <div class="card">
+            <div class="header-container">
+                <h1 class="card-header">Register</h1>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+                        {{ field }}
+                        <label class="mdl-textfield__label" for="sample3">{{ field.label }}</label>
+                    </div>
+                {% endfor %}
+                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect right-btn">Register
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

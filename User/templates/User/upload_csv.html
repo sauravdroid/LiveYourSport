@@ -1,0 +1,55 @@
+{% extends 'User/base.html' %}
+{% block head %}
+    <style>
+        button.right-btn {
+            color: #5b80b2;
+        }
+
+        .card {
+            top: 100px;
+        }
+        .select_input{
+            color: #d50000;
+        }
+    </style>
+{% endblock %}
+{% block nav %}
+    <a class="mdl-navigation__link" href="{% url 'users:all_products' %}">All Products</a>
+    <a class="mdl-navigation__link" href="{% url 'users:deploy_spider' %}">Run Spider</a>
+    <a class="mdl-navigation__link" href="{% url 'users:csv' %}">Download CSV</a>
+    <a class="mdl-navigation__link" href="{% url 'users:logout' %}">Logout</a>
+{% endblock %}
+{% block body %}
+    {#    <form method="post" enctype="multipart/form-data">#}
+    {#        {% csrf_token %}#}
+    {#        <table>#}
+    {#            {{ form.as_table }}#}
+    {#        </table>#}
+    {#        <button type="submit">Upload</button>#}
+    {#    </form>#}
+    <div class="container">
+        <div class="card">
+            <div class="header-container">
+                <h1 class="card-header">Upload CSV file</h1>
+            </div>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                    {% if forloop.counter == 1 %}
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label text-field">
+                            {{ field }}
+                            <label class="mdl-textfield__label" for="sample3">{{ field.label }}</label>
+                        </div>
+                    {% else %}
+                        <div class="file-input-container" style="margin-bottom: 20px">
+                            <span class="select_input">{{ field.label }}</span> {{ field }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect right-btn">Upload File
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

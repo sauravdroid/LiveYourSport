@@ -15,7 +15,7 @@ from .models import Product, ScrapedCSV
 
 # Create your views here.
 def index(request):
-    return render(request, 'User/index.html', {'name': 'Saurav Biswas'})
+    return redirect('users:all_products')
 
 
 def user_login(request):

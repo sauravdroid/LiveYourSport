@@ -199,6 +199,7 @@ def start_spider_debug(request):
     products = []
     q = Queue()
     p = Process(target=start_crawl, args=(q,))
+    p.daemon = True
     p.start()
     products = q.get()
     print(products)

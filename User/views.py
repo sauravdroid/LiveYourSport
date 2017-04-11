@@ -2,7 +2,7 @@ import csv
 import os
 from collections import defaultdict
 from subprocess import call
-
+from multiprocessing import Process, Queue
 from django.contrib.auth import authenticate, login, logout
 from django.core.files import File
 from django.http import HttpResponse, JsonResponse
@@ -13,6 +13,9 @@ from .forms import *
 from .models import Product, ScrapedCSV
 
 from threading import Thread
+from scrapy.crawler import CrawlerProcess, CrawlerRunner
+from .azani_spider import AzaniSpider, items
+from twisted.internet import reactor
 
 
 # Create your views here.
@@ -190,3 +193,47 @@ def create(request):
         if form.is_valid():
             form.save()
             return redirect('users:all_products')
+
+
+def start_spider_debug(request):
+    products = []
+    q = Queue()
+    p = Process(target=start_crawl, args=(q,))
+    p.start()
+    products = q.get()
+    print(products)
+    p.join()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="All_Products.csv"'
+    product_dict = generate_scraped_object_array(products)
+    keys = product_dict[0].keys()
+    writer = csv.DictWriter(response, keys)
+    writer.writeheader()
+    writer.writerows(product_dict)
+    return response
+
+
+def start_crawl(q):
+    print("Server Started")
+    runner = CrawlerRunner()
+    d = runner.crawl(AzaniSpider)
+    d.addBoth(lambda _: reactor.stop())
+    reactor.run(installSignalHandlers=False)
+    print("Scrape Completed")
+    print(items)
+    q.put(items)
+
+
+def generate_scraped_object_array(products):
+    prodlist = []
+    for product in products:
+        # if product.get("Product Name") is not None or product.get("Price") is not None or product.get(
+        #         "Url") is not None or product.get('Description' is not None):
+        prodlist.append({
+            "Product Name": product.get('Product Name'),
+            "Price": product.get('Price'),
+            "Url": product.get('URL'),
+            "Description": str(product.get('Description')),
+        })
+
+    return prodlist

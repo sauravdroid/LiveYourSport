@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^deploy/spider$',views.deploy_spider,name='deploy_spider'),
     url(r'^csv$',views.some_view,name='csv'),
     url(r'^create$',views.create,name='create'),
+    url(r'^spider/debug$',views.start_spider_debug,name='spider_debug'),
 ]

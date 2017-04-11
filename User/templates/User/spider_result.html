@@ -93,15 +93,19 @@
             link_element.css('visibility', 'hidden');
             scrap_btn.attr('disabled', true);
             $.ajax({
-                url: '/deploy/spider',
+                url: '/spider/debug',
                 type: "get",
                 data: {
                     text: "Hello World"
                 },
                 success: function (response) {
-                    console.log("Spider Finished " + response.Data);
-                    link_element.attr('href', response.Data);
+{#                    console.log("Spider Finished " + response.Data);#}
+{#                    link_element.attr('href', response.Data);#}
+                    console.log(response);
                     link_element.css('visibility', 'visible');
+{#                    link_element.download="myFileName.csv";#}
+                    link_element.attr('download',"all_products.csv");
+                    link_element.attr('href','data:text/csv;charset=utf-8,'+escape(response));
                     span.text("Please download the CSV file below");
                     loader.css('visibility', 'hidden');
                     scrap_btn.attr('disabled', false);

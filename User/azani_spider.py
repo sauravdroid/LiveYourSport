@@ -2,6 +2,8 @@ import scrapy
 from scrapy.crawler import CrawlerProcess
 
 items = []
+
+
 class AzaniSpider(scrapy.Spider):
     name = "azani"
     custom_settings = {
@@ -39,13 +41,14 @@ class AzaniSpider(scrapy.Spider):
     def parse_product(response):
         product_name = response.css('div.ProductMain h1::text').extract_first()
         product_cost = response.css('div.PriceRow em.ProductPrice::text').extract_first()
-        product_description = response.css('div.ProductDescription span *::text').extract()
+        product_description = ''.join(response.css('div.ProductDescription span *::text').extract())
         product_link = response.meta.get('url')
+
         items.append({
-            'Product Name': product_name,
-            'Price': product_cost,
-            'Description': product_description,
-            'URL': product_link
+            'Product Name': u''.join(product_name).encode('utf-8').strip(),
+            'Price': u''.join(product_cost).encode('utf-8').strip(),
+            'Description': u''.join(product_description).encode('utf-8').strip(),
+            'URL': u''.join(product_link).encode('utf-8').strip()
         })
         yield {
             'Product Name': product_name,
@@ -53,6 +56,3 @@ class AzaniSpider(scrapy.Spider):
             'Description': product_description,
             'URL': product_link
         }
-
-
-

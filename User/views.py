@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import Product, ScrapedCSV
 
+from threading import Thread
+
 
 # Create your views here.
 def index(request):
@@ -133,7 +135,10 @@ def deploy_spider(request):
                 os.remove('User/export.csv')
             except OSError:
                 print("Already Removed")
-            call(["scrapy", "runspider", "User/azani_spider.py"])
+            thread = Thread(target=call(["scrapy", "runspider", "User/azani_spider.py"]))
+            thread.start()
+            thread.join()
+            # call(["scrapy", "runspider", "User/azani_spider.py"])
             f = open("User/export.csv")
             scraped_csv = ScrapedCSV(csv_file=File(f))
             scraped_csv.save()

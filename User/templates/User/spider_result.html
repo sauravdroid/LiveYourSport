@@ -105,6 +105,11 @@
                     span.text("Please download the CSV file below");
                     loader.css('visibility', 'hidden');
                     scrap_btn.attr('disabled', false);
+                },
+                error: function (error) {
+                    span.text("Error Occured Please try again");
+                    loader.css('visibility', 'hidden');
+                    scrap_btn.attr('disabled', false);
                 }
             });
         }
